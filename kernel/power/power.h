@@ -309,6 +309,7 @@ static inline suspend_state_t pm_autosleep_state(void) { return PM_SUSPEND_ON; }
 
 /* kernel/power/wakelock.c */
 extern ssize_t pm_show_wakelocks(char *buf, bool show_active);
+extern bool pm_has_wakelock(void);
 extern int pm_wake_lock(const char *buf);
 extern int pm_wake_unlock(const char *buf);
 

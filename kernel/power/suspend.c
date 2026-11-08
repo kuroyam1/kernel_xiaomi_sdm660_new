@@ -580,6 +580,8 @@ static int enter_state(suspend_state_t state)
 	} else if (!valid_state(state)) {
 		return -EINVAL;
 	}
+	if (IS_ENABLED(CONFIG_PM_WAKELOCKS) && pm_has_wakelock())
+		return -EBUSY;
 	if (!mutex_trylock(&system_transition_mutex))
 		return -EBUSY;
 

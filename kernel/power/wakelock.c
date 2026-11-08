@@ -54,6 +54,30 @@ ssize_t pm_show_wakelocks(char *buf, bool show_active)
 	return len;
 }
 
+/*
+ * True while any userspace wakelock (the /sys/power/wake_lock interface) is
+ * active. Nothing in this tree consulted the wakelock tree when suspending, so
+ * the interface was decorative; suspend.c now gates enter_state() on this.
+ */
+bool pm_has_wakelock(void)
+{
+	struct rb_node *node;
+	struct wakelock *wl;
+	bool ret = false;
+
+	mutex_lock(&wakelocks_lock);
+	for (node = rb_first(&wakelocks_tree); node; node = rb_next(node)) {
+		wl = rb_entry(node, struct wakelock, node);
+		if (wl->ws->active) {
+			ret = true;
+			break;
+		}
+	}
+	mutex_unlock(&wakelocks_lock);
+
+	return ret;
+}
+
 #if CONFIG_PM_WAKELOCKS_LIMIT > 0
 static unsigned int number_of_wakelocks;
 
