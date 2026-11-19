@@ -93,6 +93,8 @@ if [ "$BUILD_KSU" -eq 1 ]; then
     curl -LSs "https://raw.githubusercontent.com/Baka-SU/BakaSU/main/kernel/setup.sh" | bash
     echo "[*] Injecting KernelSU configs dynamically..."
     echo "CONFIG_KSU=y" >> out/.config
+    # No manager APK is trusted: root only for uids already in /data/adb/ksu/.allowlist
+    echo "CONFIG_KSU_DISABLE_MANAGER=y" >> out/.config
 
     echo "CONFIG_KSU_MANUAL_HOOK=y" >> out/.config
     echo "# CONFIG_KSU_MANUAL_HOOK_AUTO_SETUID_HOOK is not set" >> out/.config
