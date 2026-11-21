@@ -90,7 +90,12 @@ make "${MAKE_ARGS[@]}" "$DEFCONFIG" || exit 1
 
 if [ "$BUILD_KSU" -eq 1 ]; then
     echo "[*] Fetching BakaSU driver..."
-    curl -LSs "https://raw.githubusercontent.com/Baka-SU/BakaSU/main/kernel/setup.sh" | bash
+    # Pinned: upstream main drifts and can break the manual-hook build
+    BAKASU_REF=7b65bde0710b5e7c6f755545cb15a4abd417f3a8
+    curl -LSs "https://raw.githubusercontent.com/Baka-SU/BakaSU/main/kernel/setup.sh" | bash -s "$BAKASU_REF"
+    # lsm_hooks.o calls ksu_handle_rename, which lives in the manager objects that
+    # CONFIG_KSU_DISABLE_MANAGER drops -> undefined symbol without this
+    git -C KernelSU apply "$(pwd)/patches/bakasu-disable-manager.diff" || exit 1
     echo "[*] Injecting KernelSU configs dynamically..."
     echo "CONFIG_KSU=y" >> out/.config
     # No manager APK is trusted: root only for uids already in /data/adb/ksu/.allowlist
