@@ -31,7 +31,6 @@
  */
 
 #include <linux/module.h>
-#include <linux/ramfs.h>
 #include <linux/shmem_fs.h>
 #include <linux/dma-buf.h>
 #include "vgem_drv.h"
