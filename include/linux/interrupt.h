@@ -35,6 +35,12 @@
 				 IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING)
 #define IRQF_TRIGGER_PROBE	0x00000010
 
+/* CAF irq extensions define this; this tree does not, and CAF DRM only uses
+ * it as a marker, so it maps to "no extra flag" here. */
+#ifndef IRQF_PERF_CRITICAL
+#define IRQF_PERF_CRITICAL 0
+#endif
+
 /*
  * These flags used only by the kernel as part of the
  * irq handling routines.
